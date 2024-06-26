@@ -11,6 +11,12 @@ public class EmployeeIssue {
     this.employee = employee;
   }
 
+  public EmployeeIssue(Employee employee, SalaryPolicyViolation salaryPolicyViolation, Integer reportLineLengthExcess) {
+    this.employee = employee;
+    this.salaryPolicyViolation = salaryPolicyViolation;
+    this.reportLineLengthExcess = reportLineLengthExcess;
+  }
+
   public Employee getEmployee() {
     return employee;
   }

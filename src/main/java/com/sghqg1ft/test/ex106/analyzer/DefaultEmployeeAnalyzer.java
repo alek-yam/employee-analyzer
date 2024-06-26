@@ -6,12 +6,13 @@ import com.sghqg1ft.test.ex106.analyzer.result.SalaryPolicyViolation;
 import com.sghqg1ft.test.ex106.config.EmployeeAnalyzerConfig;
 import com.sghqg1ft.test.ex106.data.model.Employee;
 import com.sghqg1ft.test.ex106.data.model.EmployeeTree;
+import com.sghqg1ft.test.ex106.exception.InvalidTreeException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.Set;
 
 public class DefaultEmployeeAnalyzer implements EmployeeAnalyzer {
   private static final Integer ZERO_NODE_LEVEL = 0;
@@ -29,7 +30,10 @@ public class DefaultEmployeeAnalyzer implements EmployeeAnalyzer {
   public AnalysisResult analyze(EmployeeTree employeeTree) {
     // initialize process queue
     Employee root = employeeTree.getRoot();
-    List<Employee> subordinates = employeeTree.getSubordinates(root.id());
+    if (root == null) {
+      throw new InvalidTreeException("Employee tree doesn't contain root node.");
+    }
+    Set<Employee> subordinates = employeeTree.getSubordinates(root.id());
     // There are two options of getting subordinates and report line length from implementation perspective:
     // 1. Add methods getSubordinates() and getReportLineLength() to Employee class and use reference to employeeTree
     //    for calculating the values (reference to employeeTree should be added to Employee class as well in this case)
@@ -72,7 +76,7 @@ public class DefaultEmployeeAnalyzer implements EmployeeAnalyzer {
                                   EmployeeTree employeeTree,
                                   Queue<EmployeeNode> processQueue) {
     currentNode.subordinates().forEach(sub -> {
-      List<Employee> subSubordinates = employeeTree.getSubordinates(sub.id());
+      Set<Employee> subSubordinates = employeeTree.getSubordinates(sub.id());
       Integer subNodeLevel = currentNode.nodeLevel + 1;
       EmployeeNode employeeNode = new EmployeeNode(sub, subSubordinates, subNodeLevel);
       processQueue.add(employeeNode);
@@ -81,7 +85,7 @@ public class DefaultEmployeeAnalyzer implements EmployeeAnalyzer {
 
   private Optional<SalaryPolicyViolation> checkSalaryPolicyViolation(EmployeeNode employeeNode) {
     Employee employee = employeeNode.employee();
-    List<Employee> subordinates = employeeNode.subordinates();
+    Set<Employee> subordinates = employeeNode.subordinates();
 
     if (!subordinates.isEmpty()) {
       BigDecimal avgSubSalary = getAverageSalary(subordinates);
@@ -105,7 +109,7 @@ public class DefaultEmployeeAnalyzer implements EmployeeAnalyzer {
     return Optional.empty();
   }
 
-  private static BigDecimal getAverageSalary(List<Employee> employees) {
+  private static BigDecimal getAverageSalary(Set<Employee> employees) {
     if (employees.isEmpty()) {
       throw new RuntimeException("Cannot calculate average salary for empty collection.");
     }
@@ -144,7 +148,7 @@ public class DefaultEmployeeAnalyzer implements EmployeeAnalyzer {
     return Optional.empty();
   }
 
-  record EmployeeNode(Employee employee, List<Employee> subordinates, Integer nodeLevel) {}
+  record EmployeeNode(Employee employee, Set<Employee> subordinates, Integer nodeLevel) {}
 
   record SalaryFork(BigDecimal minLimit, BigDecimal maxLimit) {
     public boolean isLessThanMinLimit(BigDecimal value) {

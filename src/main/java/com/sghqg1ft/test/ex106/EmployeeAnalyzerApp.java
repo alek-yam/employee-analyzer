@@ -27,7 +27,6 @@ public class EmployeeAnalyzerApp {
       CommandLineWriter.printReport(appConfig, result);
     } catch (Exception ex) {
       LOG.severe("Cannot analyze employee structure. Reason: " + ex.getMessage());
-      ex.printStackTrace();
     }
   }
 }
