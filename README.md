@@ -1,5 +1,8 @@
 # Employee analyzer
 
+> **Current version**
+> 1.0
+
 The aim of this application is to analyze organizational structure of employees and identify potential improvements.
 
 Current version of application includes the following checks:
@@ -22,23 +25,26 @@ Employee ID: 309 [Dmitrii Dobrov], report line length is above max limit (4) by 
 How to build the application
 ---
 
-> **Important**
-> Java SDK 17 must be installed on the system.
-
-1. Clone git repository of the project `git clone`
+1. Clone git repository of the project `git clone https://github.com/alek-yam/employee-analyzer.git`
 2. Run `mvn clean compile assembly:single` to build the application.
-3. Once build is created you can find executable JAR file (`employee-analyzer-<version>.jar`) in the `target` subfolder of the project.
+3. Once build is ready you can find executable JAR file (`employee-analyzer-<version>.jar`) in the `target` subfolder of the project.
 
 How to use the application
 ---
+
+> **Important**<br/>
+> Java JRE version 17 or higher must be installed on your system.<br/>
+> See more details on page [Get Java for desktop applications](https://www.java.com/en/)
 
 The application is delivered as JAR file and can be run in terminal using the following command: 
 ```shell
 java -jar employee-analyzer-<version>.jar -f <path to csv file>
 ```
 
-2. Start application with `mvn exec:exec -pl journal-application`
-3. To check that your application is running enter url `http://localhost:8080`
+Path to csv file is mandatory parameter to run the application.
+It can be specified by adding one of the following arguments to the run command:
+* `--filename <path to csv file>`
+* `-f <path to csv file>`
 
 Format of csv file should be the following (example):
 
