@@ -34,18 +34,7 @@ public class DefaultEmployeeAnalyzer implements EmployeeAnalyzer {
       throw new InvalidTreeException("Employee tree doesn't contain root node.");
     }
     Set<Employee> subordinates = employeeTree.getSubordinates(root.id());
-    // There are two options of getting subordinates and report line length from implementation perspective:
-    // 1. Add methods getSubordinates() and getReportLineLength() to Employee class and use reference to employeeTree
-    //    for calculating the values (reference to employeeTree should be added to Employee class as well in this case)
-    //    - this is better from OOP design prospective, but worse for performance because of possible multiple requests
-    //    to employeeTree (even with adding subordinates and manager fields with lazy initialization to Employee class,
-    //    because you have to retrieve manager instance for all levels of reporting line)
-    // 2. Retrieve subordinates only once and avoid retrieving managers at all, wrap up employee with subordinates
-    //    and report line length in intermediate object (EmpoyeeNode) for processing
-    //    - this approach was selected because it is better from performance prospective regardless it makes code
-    //    a little bit more procedural style and less readable. But impact of these downsides are restricted because
-    //    this approach is isolated inside DefaultEmployeeAnalyzer and has no negative impact to other classes.
-    EmployeeNode rootNode = new EmployeeNode(root, subordinates, ZERO_NODE_LEVEL);
+    EmployeeNode rootNode = new EmployeeNode(root, subordinates, ZERO_NODE_LEVEL); // see description of EmployeeNode for more context
     Queue<EmployeeNode> processQueue = new LinkedList<>();
     processQueue.add(rootNode);
 
@@ -148,6 +137,18 @@ public class DefaultEmployeeAnalyzer implements EmployeeAnalyzer {
     return Optional.empty();
   }
 
+  /* There are two options of getting subordinates and report line length from implementation perspective:
+     1. Add methods getSubordinates() and getReportLineLength() to Employee class and use reference to employeeTree
+        for calculating the values inside these methods (reference to employeeTree should be added to Employee class
+         as well in this case)
+        - this is better from OOP design prospective, but worse for performance because of possible multiple requests
+        to employeeTree (even with adding subordinates and manager fields with lazy initialization to Employee class,
+        because you have to retrieve manager instance for all levels of reporting line in this case)
+     2. Wrap up employee with subordinates and report line length in intermediate object (EmpoyeeNode) for processing.
+        In this case we have to retrieve subordinates only once and can avoid retrieving managers at all.
+        - this approach was selected because it is better from performance prospective regardless it makes code
+        a little bit more procedural style and less readable. But impact of these downsides are restricted because
+        this approach is isolated inside DefaultEmployeeAnalyzer and has no negative impact to other classes. */
   record EmployeeNode(Employee employee, Set<Employee> subordinates, Integer nodeLevel) {}
 
   record SalaryFork(BigDecimal minLimit, BigDecimal maxLimit) {
