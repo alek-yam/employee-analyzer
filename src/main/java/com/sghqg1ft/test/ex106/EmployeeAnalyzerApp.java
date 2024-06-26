@@ -26,7 +26,7 @@ public class EmployeeAnalyzerApp {
       AnalysisResult result = employeeAnalyzer.analyze(employeeTree);
       CommandLineWriter.printReport(appConfig, result);
     } catch (Exception ex) {
-      LOG.severe("Cannot analyze employee structure. Reason: " + ex.getMessage());
+      LOG.severe("Cannot analyze organizational structure of employees. Reason: " + ex.getMessage());
     }
   }
 }
