@@ -25,6 +25,10 @@ Employee ID: 309 [Dmitrii Dobrov], report line length is above max limit (4) by 
 How to build the application
 ---
 
+> **Important**<br/>
+> Note that Java SDK 17 or higher, Git and Maven must be installed in your system.<br/>
+> See documentaion of these tools for more details.
+
 1. Clone git repository of the project `git clone https://github.com/alek-yam/employee-analyzer.git`
 2. Run `mvn clean compile assembly:single` to build the application.
 3. Once build is ready you can find executable JAR file (`employee-analyzer-<version>.jar`) in the `target` subfolder of the project.
@@ -33,7 +37,7 @@ How to use the application
 ---
 
 > **Important**<br/>
-> Java JRE version 17 or higher must be installed on your system.<br/>
+> Java JRE 17 or higher must be installed in your system.<br/>
 > See more details on page [Get Java for desktop applications](https://www.java.com/en/)
 
 The application is delivered as JAR file and can be run in terminal using the following command: 
