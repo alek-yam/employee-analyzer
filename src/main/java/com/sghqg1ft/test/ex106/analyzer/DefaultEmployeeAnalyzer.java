@@ -144,10 +144,10 @@ public class DefaultEmployeeAnalyzer implements EmployeeAnalyzer {
         - this is better from OOP design prospective, but worse for performance because of possible multiple requests
         to employeeTree (even with adding subordinates and manager fields with lazy initialization to Employee class,
         because you have to retrieve manager instance for all levels of reporting line in this case)
-     2. Wrap up employee with subordinates and report line length in intermediate object (EmpoyeeNode) for processing.
+     2. Wrap up employee with subordinates and report line length in intermediate object (EmployeeNode) for processing.
         In this case we have to retrieve subordinates only once and can avoid retrieving managers at all.
         - this approach was selected because it is better from performance prospective regardless it makes code
-        a little bit more procedural style and less readable. But impact of these downsides are restricted because
+        a little bit more procedural style and less readable. But impact of these downsides is restricted because
         this approach is isolated inside DefaultEmployeeAnalyzer and has no negative impact to other classes. */
   record EmployeeNode(Employee employee, Set<Employee> subordinates, Integer nodeLevel) {}
 
